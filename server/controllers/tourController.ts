@@ -1,36 +1,10 @@
-import fs from 'fs';
 import { Request, Response, NextFunction } from 'express';
-import path from 'path';
+
+import Tour from '../models/tourModel';
 
 interface TourProps {
   id: number;
 }
-
-const filePath = path.join(__dirname, '..', '..', 'data', 'tours-simple.json');
-
-const tours = JSON.parse(
-  // toString() ensures a string argument is passed to JSON.parse()
-  fs.readFileSync(filePath).toString()
-);
-
-export const checkID = (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-  val: string
-) => {
-  const id = Number(req.params.id);
-  console.log(val);
-
-  if (id > tours.length) {
-    return res.status(404).json({
-      status: 'error',
-      message: 'No tour found',
-    });
-  }
-
-  next();
-};
 
 export const checkBody = (req: Request, res: Response, next: NextFunction) => {
   if (!req.body.name || !req.body.price) {

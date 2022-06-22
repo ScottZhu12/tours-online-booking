@@ -6,13 +6,10 @@ import {
   getTour,
   updateTour,
   deleteTour,
-  checkID,
   checkBody,
 } from '../controllers/tourController';
 
 const tourRouter = express.Router();
-
-tourRouter.param('id', checkID);
 
 // get() method and post() method share the same url
 tourRouter.route('/').get(getAllTours).post(checkBody, createTour);
