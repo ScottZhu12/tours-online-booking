@@ -1,4 +1,4 @@
-import { connect, HydratedDocument } from 'mongoose';
+import { connect } from 'mongoose';
 import dotenv from 'dotenv';
 
 import app from './app';
@@ -14,13 +14,11 @@ const run = async () => {
   await connect(DB);
 };
 
-run().catch((err) => console.log(err));
+run().catch((err) => {
+  console.log(err);
+});
 
 const port = process.env.SERVER_PORT || 8000;
-
-app.get('/', (req, res) => {
-  res.send('hello from the server');
-});
 
 app.listen(port, () => {
   console.log(`App is running on port ${port}`);

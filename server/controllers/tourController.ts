@@ -1,77 +1,94 @@
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 
 import Tour from '../models/tourModel';
 
-interface TourProps {
-  id: number;
-}
+export const getAllTours = async (req: Request, res: Response) => {
+  try {
+    const tours = await Tour.find();
 
-export const checkBody = (req: Request, res: Response, next: NextFunction) => {
-  if (!req.body.name || !req.body.price) {
-    return res.status(400).json({
+    res.status(200).json({
+      status: 'success',
+      results: tours.length,
+      data: {
+        tours,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
       status: 'error',
-      message: 'Missing name or price',
+      message: err,
     });
   }
-
-  next();
 };
 
-export const getAllTours = (req: Request, res: Response) => {
-  res.status(200).json({
-    status: 'success',
-    results: tours.length,
-    data: {
-      tours,
-    },
-  });
+export const getTour = async (req: Request, res: Response) => {
+  try {
+    const tour = await Tour.findById(req.params.id);
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        tour,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'error',
+      message: err,
+    });
+  }
 };
 
-export const getTour = (req: Request, res: Response) => {
-  // get the id params from url
-  const id = Number(req.params.id);
-  // get the specific tour based on the id
-  const tour = tours.find((tour: TourProps) => tour.id === id);
+export const createTour = async (req: Request, res: Response) => {
+  try {
+    const newTour = await Tour.create(req.body);
 
-  res.status(200).json({
-    status: 'success',
-    data: {
-      tour,
-    },
-  });
-};
-
-export const createTour = (req: Request, res: Response) => {
-  // assign an id to the new data
-  const newId = tours[tours.length - 1].id + 1;
-  const newTour = Object.assign({ id: newId }, req.body);
-
-  // add the new tour to the existing data
-  tours.push(newTour);
-
-  // persist data to the backend server
-  fs.writeFile(filePath, JSON.stringify(tours), (err) => {
     res.status(201).json({
       status: 'success',
       data: {
         tour: newTour,
       },
     });
-  });
+  } catch (err) {
+    res.status(400).json({
+      status: 'error',
+      message: err,
+    });
+  }
 };
 
-export const updateTour = (req: Request, res: Response) => {
-  res.status(200).json({
-    status: 'success',
-    data: {
-      tour: '<Updated tour here...>',
-    },
-  });
+export const updateTour = async (req: Request, res: Response) => {
+  try {
+    const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        tour,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'error',
+      message: err,
+    });
+  }
 };
 
-export const deleteTour = (req: Request, res: Response) => {
-  res.status(204).json({
-    status: 'success',
-    data: null,
-  });
+export const deleteTour = async (req: Request, res: Response) => {
+  try {
+    await Tour.findByIdAndDelete(req.params.id);
+
+    res.status(204).json({
+      status: 'success',
+      data: null,
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'error',
+      message: err,
+    });
+  }
 };
