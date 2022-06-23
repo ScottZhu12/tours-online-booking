@@ -1,5 +1,4 @@
-import fs from 'fs';
-import { Request, Response, NextFunction } from 'express';
+import { Request, Response } from 'express';
 
 import Tour from '../models/tourModel';
 
