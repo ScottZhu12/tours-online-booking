@@ -2,9 +2,42 @@ import { Request, Response } from 'express';
 
 import Tour from '../models/tourModel';
 
-export const getAllTours = (req: Request, res: Response) => {};
+export const getAllTours = async (req: Request, res: Response) => {
+  try {
+    const tours = await Tour.find();
 
-export const getTour = (req: Request, res: Response) => {};
+    res.status(200).json({
+      status: 'success',
+      results: tours.length,
+      data: {
+        tours,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'error',
+      message: err,
+    });
+  }
+};
+
+export const getTour = async (req: Request, res: Response) => {
+  try {
+    const tour = await Tour.findById(req.params.id);
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        tour,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'error',
+      message: err,
+    });
+  }
+};
 
 export const createTour = async (req: Request, res: Response) => {
   try {
@@ -19,23 +52,43 @@ export const createTour = async (req: Request, res: Response) => {
   } catch (err) {
     res.status(400).json({
       status: 'error',
-      message: 'Invalid data sent',
+      message: err,
     });
   }
 };
 
-export const updateTour = (req: Request, res: Response) => {
-  res.status(200).json({
-    status: 'success',
-    data: {
-      tour: '<Updated tour here...>',
-    },
-  });
+export const updateTour = async (req: Request, res: Response) => {
+  try {
+    const tour = await Tour.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+    });
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        tour,
+      },
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'error',
+      message: err,
+    });
+  }
 };
 
-export const deleteTour = (req: Request, res: Response) => {
-  res.status(204).json({
-    status: 'success',
-    data: null,
-  });
+export const deleteTour = async (req: Request, res: Response) => {
+  try {
+    await Tour.findByIdAndDelete(req.params.id);
+
+    res.status(204).json({
+      status: 'success',
+      data: null,
+    });
+  } catch (err) {
+    res.status(404).json({
+      status: 'error',
+      message: err,
+    });
+  }
 };
