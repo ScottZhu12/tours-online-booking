@@ -58,6 +58,15 @@ const TourSchema = new mongoose_1.Schema({
     startDates: {
         type: [Date],
     },
+}, { toJSON: { virtuals: true }, toObject: { virtuals: true } });
+// create virtual property for schema
+TourSchema.virtual('durationWeeks').get(function () {
+    return this.duration / 7;
+});
+// create document middleware
+// runs before .save() and .create()
+TourSchema.pre('save', function () {
+    console.log(this);
 });
 // create a model
 const Tour = (0, mongoose_1.model)('Tour', TourSchema);

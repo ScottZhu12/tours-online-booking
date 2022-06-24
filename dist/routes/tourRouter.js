@@ -6,6 +6,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const tourController_1 = require("../controllers/tourController");
 const tourRouter = express_1.default.Router();
+tourRouter.route('/top-5-cheap').get(tourController_1.aliasTopTours, tourController_1.getAllTours);
+tourRouter.route('/tour-stats').get(tourController_1.getTourStats);
+tourRouter.route('/monthly-plan/:year').get(tourController_1.getMonthlyPlan);
 // get() method and post() method share the same url
 tourRouter.route('/').get(tourController_1.getAllTours).post(tourController_1.createTour);
 // get() method, patch() method, and delete() method share the same url
